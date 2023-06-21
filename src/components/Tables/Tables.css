@@ -1,0 +1,33 @@
+.tables {
+  display: flex;
+  padding: 10px 15px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  border: 1px solid green;
+}
+
+.tables__buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tables__data {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.tables__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow {
+  width: 20px;
+}
