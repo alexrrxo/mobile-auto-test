@@ -26,9 +26,12 @@ export const getData = () => {
   return async (dispatch: any) => {
     const response = await coinMarketApi.getData();
 
+    console.log(response.last_updated);
+
     const btcData = {
-      timeStamp: timeConverter(response.last_updated),
+      time: timeConverter(response.last_updated),
       price: response.quote.USD.price,
+      isoTime: response.last_updated,
     };
 
     const localData = localStorage.getItem('btcData');
@@ -37,9 +40,11 @@ export const getData = () => {
       debugger;
       localStorage.setItem('btcData', JSON.stringify([btcData]));
     } else {
+      // const updatedBtcData = JSON.parse(localData).push(btcData);
+      const updatedBtcData = JSON.parse(localData);
+      updatedBtcData.push({ ...btcData });
       debugger;
-      const updatedBtcData = JSON.parse(localData).push(btcData);
-      localStorage.setItem('btcData', JSON.stringify([updatedBtcData]));
+      localStorage.setItem('btcData', JSON.stringify(updatedBtcData));
     }
 
     return dispatch({ type: GET_DATA, payload: btcData });
