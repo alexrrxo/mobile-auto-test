@@ -8,7 +8,7 @@ export type InitialState = {
 
 export type ICrypto = {
   id: string;
-  isoTime: string;
+  timeStamp: number;
   price: number;
   time: string;
 };

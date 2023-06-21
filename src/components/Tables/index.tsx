@@ -21,25 +21,43 @@ const Tables = () => {
   const sortHandlerLow = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_LOW });
   };
+  const sortHandlerLater = () => {
+    dispatch({ type: CryptoTypes.SORT_DATA_LATER });
+  };
+  const sortHandlerEarlier = () => {
+    dispatch({ type: CryptoTypes.SORT_DATA_EARLIER });
+  };
 
   return (
     <div className="tables">
       <div className="tables__buttons">
-        <button className="tables__button">
-          Дата/Время
-          <img className="arrow" src={upArrow} alt="" />
-        </button>
+        {dateSort === 'later' ? (
+          <TableButton
+            clickHandler={sortHandlerEarlier}
+            imgSrc={dateSort ? upArrow : ''}
+            text="Дата/Время"
+          />
+        ) : (
+          <TableButton
+            clickHandler={sortHandlerLater}
+            imgSrc={dateSort ? downArrow : ''}
+            text="Дата/Время"
+          />
+        )}
 
-        <TableButton
-          clickHandler={sortHandlerHigh}
-          imgSrc={downArrow}
-          text="Цена"
-        />
-        <TableButton
-          clickHandler={sortHandlerLow}
-          imgSrc={upArrow}
-          text="Цена"
-        />
+        {priceSort === 'high' ? (
+          <TableButton
+            clickHandler={sortHandlerLow}
+            imgSrc={priceSort ? upArrow : ''}
+            text="Цена"
+          />
+        ) : (
+          <TableButton
+            clickHandler={sortHandlerHigh}
+            imgSrc={priceSort ? downArrow : ''}
+            text="Цена"
+          />
+        )}
       </div>
       <div className="tables__data">
         {data.map((crypto: ICrypto) => (
