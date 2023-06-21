@@ -5,16 +5,17 @@ import { coinMarketApi } from './../../api/coinMarketApi';
 const initialState: InitialState = {
   isFetching: true,
   errorMessage: '',
+  priceSort: null,
+  dateSort: null,
   data: [],
 };
 
 export enum CryptoTypes {
   INITIALIZE_APP = 'INITIALIZE_APP',
+  SORT_DATA_LOW = 'SORT_DATA_LOW',
+  SORT_DATA_HIGH = 'SORT_DATA_HIGH',
   GET_DATA = 'GET_DATA',
 }
-
-type PriceSort = 'High' | 'Low';
-type DateSort = 'Earlier' | 'Later';
 
 const cryptoReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -23,6 +24,22 @@ const cryptoReducer = (state = initialState, action: any) => {
       return {
         ...state,
         data: !dataFromLocalstorage ? [] : JSON.parse(dataFromLocalstorage),
+      };
+    }
+    case CryptoTypes.SORT_DATA_LOW: {
+      return {
+        ...state,
+        data: [...state.data].sort((a, b) => a.price - b.price),
+        priceSort: 'low' as typeof state.priceSort,
+        dateSort: null,
+      };
+    }
+    case CryptoTypes.SORT_DATA_HIGH: {
+      return {
+        ...state,
+        data: [...state.data].sort((a, b) => b.price - a.price),
+        priceSort: 'high' as typeof state.priceSort,
+        dateSort: null,
       };
     }
     case CryptoTypes.GET_DATA: {
@@ -40,6 +57,7 @@ export const getData = () => {
   return async (dispatch: any) => {
     const response = await coinMarketApi.getData();
     const btcData = {
+      id: String(response.id) + new Date().getTime(),
       time: timeConverter(response.last_updated),
       price: response.quote.USD.price,
       isoTime: response.last_updated,

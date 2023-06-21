@@ -19,8 +19,16 @@
 .tables__data {
   width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.table__row {
+  width: 100%;
+  display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .tables__button {
