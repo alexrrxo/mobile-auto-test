@@ -14,9 +14,10 @@ const instance = axios.create({
 class CoinMarketApi {
   async getData() {
     try {
-      debugger;
       const response = await instance.get('');
-      return response;
+      if (response.status === 200) {
+        return response.data.data.BTC;
+      }
     } catch (error) {
       return error;
     }
