@@ -15,3 +15,5 @@ export const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(thunk))
 );
+
+export type IRootState = ReturnType<typeof rootReducer>;

@@ -2,9 +2,10 @@ import React from 'react';
 import IntervalBar from '../IntervalBar';
 import Tables from '../Tables';
 import Pagination from '../Pagination';
-import { coinMarketApi } from '../../api/coinMarketApi';
 import { getData } from '../../store/reducers/crypto.reducer';
 import { useDispatch } from 'react-redux';
+
+import './Board.css';
 
 const Board = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Board = () => {
   };
 
   return (
-    <div>
+    <div className="board">
       <IntervalBar />
       <Tables />
       <Pagination />

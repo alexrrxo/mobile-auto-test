@@ -3,8 +3,13 @@ import './Tables.css';
 
 import upArrow from '../../assets/icons/up-arrow.svg';
 import downArrow from '../../assets/icons/down-arrow.svg';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../store';
+import { ICrypto } from '../../types/store/crypto.reducer.type';
 
 const Tables = () => {
+  const { data } = useSelector((state: IRootState) => state.crypto);
+
   return (
     <div className="tables">
       <div className="tables__buttons">
@@ -19,18 +24,14 @@ const Tables = () => {
       </div>
       <div className="tables__data">
         <div>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
+          {data.map((crypto: ICrypto) => (
+            <p>{crypto.time}</p>
+          ))}
         </div>
         <div>
-          <p>2.99</p>
-          <p>4.00</p>
-          <p>6.23</p>
-          <p>4.21</p>
-          <p>5.22</p>
+          {data.map((crypto: ICrypto) => (
+            <p>{crypto.price}</p>
+          ))}
         </div>
       </div>
     </div>
