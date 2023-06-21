@@ -3,11 +3,14 @@ import IntervalBar from '../IntervalBar';
 import Tables from '../Tables';
 import Pagination from '../Pagination';
 import { coinMarketApi } from '../../api/coinMarketApi';
+import { getData } from '../../store/reducers/crypto.reducer';
+import { useDispatch } from 'react-redux';
 
 const Board = () => {
-  const getData = async () => {
-    const response = await coinMarketApi.getData();
-    console.log(response);
+  const dispatch = useDispatch();
+
+  const getDataHandler = () => {
+    dispatch<any>(getData());
   };
 
   return (
@@ -16,7 +19,7 @@ const Board = () => {
       <Tables />
       <Pagination />
 
-      <button onClick={getData}>get data from coinApi</button>
+      <button onClick={getDataHandler}>get data from coinApi</button>
     </div>
   );
 };
