@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import { ICrypto } from '../../types/store/crypto.reducer.type';
 import { CryptoTypes } from '../../store/reducers/crypto.reducer';
+import TableButton from './TableButton';
 
 const Tables = () => {
   const dispatch = useDispatch();
@@ -28,18 +29,17 @@ const Tables = () => {
           Дата/Время
           <img className="arrow" src={upArrow} alt="" />
         </button>
-        {priceSort === 'high' && (
-          <button className="tables__button" onClick={sortHandlerHigh}>
-            Цена больше
-            <img className="arrow" src={downArrow} alt="" />
-          </button>
-        )}
-        {priceSort === 'low' && (
-          <button className="tables__button" onClick={sortHandlerLow}>
-            Цена меньше
-            <img className="arrow" src={downArrow} alt="" />
-          </button>
-        )}
+
+        <TableButton
+          clickHandler={sortHandlerHigh}
+          imgSrc={downArrow}
+          text="Цена"
+        />
+        <TableButton
+          clickHandler={sortHandlerLow}
+          imgSrc={upArrow}
+          text="Цена"
+        />
       </div>
       <div className="tables__data">
         {data.map((crypto: ICrypto) => (
