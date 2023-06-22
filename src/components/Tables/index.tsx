@@ -12,19 +12,20 @@ import { cutArray } from '../../helpers/localstorage';
 
 const Tables = () => {
   const dispatch = useDispatch();
-  const { priceSort, dateSort, pageData, data, currentPage, limit } =
-    useSelector((state: IRootState) => state.crypto);
+  const { sortedBy, pageData, data, currentPage, limit } = useSelector(
+    (state: IRootState) => state.crypto
+  );
 
-  const sortHandlerHigh = () => {
+  const sortHighHandler = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_HIGH });
   };
-  const sortHandlerLow = () => {
+  const sortLowHandler = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_LOW });
   };
-  const sortHandlerLater = () => {
+  const sortLaterHandler = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_LATER });
   };
-  const sortHandlerEarlier = () => {
+  const sortEarlierHandler = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_EARLIER });
   };
 
@@ -37,30 +38,30 @@ const Tables = () => {
   return (
     <div className="tables">
       <div className="tables__buttons">
-        {dateSort === 'later' ? (
+        {sortedBy === 'later' || sortedBy === null ? (
           <TableButton
-            clickHandler={sortHandlerEarlier}
-            imgSrc={dateSort ? upArrow : ''}
+            clickHandler={sortEarlierHandler}
+            imgSrc={upArrow}
             text="Дата/Время"
           />
         ) : (
           <TableButton
-            clickHandler={sortHandlerLater}
-            imgSrc={dateSort ? downArrow : ''}
+            clickHandler={sortLaterHandler}
+            imgSrc={sortedBy === 'earlier' ? downArrow : ''}
             text="Дата/Время"
           />
         )}
 
-        {priceSort === 'high' ? (
+        {sortedBy === 'high' ? (
           <TableButton
-            clickHandler={sortHandlerLow}
-            imgSrc={priceSort ? upArrow : ''}
+            clickHandler={sortLowHandler}
+            imgSrc={sortedBy === 'high' ? upArrow : ''}
             text="Цена"
           />
         ) : (
           <TableButton
-            clickHandler={sortHandlerHigh}
-            imgSrc={priceSort ? downArrow : ''}
+            clickHandler={sortHighHandler}
+            imgSrc={sortedBy === 'low' ? downArrow : ''}
             text="Цена"
           />
         )}

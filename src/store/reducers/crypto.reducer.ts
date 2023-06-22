@@ -2,10 +2,10 @@ import { cutArray, getDataFromLocalstorage } from '../../helpers/localstorage';
 import { intervalConverter, timeConverter } from '../../helpers/timeConverter';
 import { ICrypto, InitialState } from '../../types/store/crypto.reducer.type';
 import { coinMarketApi } from './../../api/coinMarketApi';
+import { IRootState } from '..';
 
 const initialState: InitialState = {
-  priceSort: null,
-  dateSort: null,
+  sortedBy: 'later',
   totalNotes: 10,
   currentPage: 1,
   limit: 10,
@@ -37,35 +37,35 @@ const cryptoReducer = (state = initialState, action: any) => {
       };
     }
     case CryptoTypes.SORT_DATA_HIGH: {
+      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => b.price - a.price),
-        priceSort: 'high' as typeof state.priceSort,
-        dateSort: null,
+        sortedBy: 'high' as typeof state.sortedBy,
       };
     }
     case CryptoTypes.SORT_DATA_LOW: {
+      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => a.price - b.price),
-        priceSort: 'low' as typeof state.priceSort,
-        dateSort: null,
+        sortedBy: 'low' as typeof state.sortedBy,
       };
     }
     case CryptoTypes.SORT_DATA_LATER: {
+      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => b.timeStamp - a.timeStamp),
-        dateSort: 'later' as typeof state.dateSort,
-        priceSort: null,
+        sortedBy: 'later' as typeof state.sortedBy,
       };
     }
     case CryptoTypes.SORT_DATA_EARLIER: {
+      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => a.timeStamp - b.timeStamp),
-        dateSort: 'earlier' as typeof state.dateSort,
-        priceSort: null,
+        sortedBy: 'earlier' as typeof state.sortedBy,
       };
     }
 
@@ -89,7 +89,7 @@ const cryptoReducer = (state = initialState, action: any) => {
     case CryptoTypes.ADD_DATA: {
       return {
         ...state,
-        data: [...state.data, action.payload],
+        data: [action.payload, ...state.data],
       };
     }
     case CryptoTypes.SET_DATA: {
@@ -118,24 +118,40 @@ const cryptoReducer = (state = initialState, action: any) => {
 };
 
 export const addData = () => {
-  return async (dispatch: any) => {
-    const response = await coinMarketApi.getData();
-    const btcData = {
-      id: String(response.id) + new Date().getTime(),
-      time: timeConverter(response.last_updated),
-      price: response.quote.USD.price,
-      timeStamp: new Date(response.last_updated).getTime(),
-    };
-    const localData = localStorage.getItem('btcData');
-    if (!localData) {
-      localStorage.setItem('btcData', JSON.stringify([btcData]));
-    } else {
-      const updatedBtcData = JSON.parse(localData);
-      updatedBtcData.unshift({ ...btcData });
-      localStorage.setItem('btcData', JSON.stringify(updatedBtcData));
-    }
+  debugger;
+  return async (dispatch: any, getState: () => IRootState) => {
+    try {
+      const response = await coinMarketApi.getData();
+      const btcData = {
+        id: String(response.id) + new Date().getTime(),
+        time: timeConverter(response.last_updated),
+        price: response.quote.USD.price,
+        timeStamp: new Date(response.last_updated).getTime(),
+      };
+      const localData = localStorage.getItem('btcData');
+      if (!localData) {
+        localStorage.setItem('btcData', JSON.stringify([btcData]));
+      } else {
+        const updatedBtcData = JSON.parse(localData);
+        updatedBtcData.unshift({ ...btcData });
+        localStorage.setItem('btcData', JSON.stringify(updatedBtcData));
+      }
 
-    return dispatch({ type: CryptoTypes.ADD_DATA, payload: btcData });
+      dispatch({
+        type: CryptoTypes.SET_DATA,
+        payload: JSON.parse(localStorage.getItem('btcData') as string),
+      });
+
+      const { sortedBy } = getState().crypto;
+
+      sortedBy === 'high' && dispatch({ type: CryptoTypes.SORT_DATA_HIGH });
+      sortedBy === 'low' && dispatch({ type: CryptoTypes.SORT_DATA_LOW });
+      sortedBy === 'later' && dispatch({ type: CryptoTypes.SORT_DATA_LATER });
+      sortedBy === 'earlier' &&
+        dispatch({ type: CryptoTypes.SORT_DATA_EARLIER });
+    } catch (error) {
+      alert(error);
+    }
   };
 };
 

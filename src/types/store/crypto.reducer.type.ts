@@ -1,6 +1,5 @@
 export type InitialState = {
-  priceSort: IPriceSort;
-  dateSort: IDateSort;
+  sortedBy: PriceSort | DateSort;
   totalNotes: number;
   currentPage: number;
   limit: number;
@@ -16,5 +15,5 @@ export type ICrypto = {
   time: string;
 };
 
-export type IPriceSort = 'high' | 'low' | null;
-export type IDateSort = 'later' | 'earlier' | null;
+export type PriceSort = 'high' | 'low';
+export type DateSort = 'later' | 'earlier';

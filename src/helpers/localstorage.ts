@@ -1,9 +1,4 @@
-import { CryptoTypes } from '../store/reducers/crypto.reducer';
-import {
-  ICrypto,
-  IDateSort,
-  IPriceSort,
-} from '../types/store/crypto.reducer.type';
+import { ICrypto } from '../types/store/crypto.reducer.type';
 
 export const getDataFromLocalstorage = () => {
   const dataFromLocalstorage = localStorage.getItem('btcData');

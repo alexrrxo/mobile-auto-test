@@ -1,23 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './IntervalBar.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { CryptoTypes, addData } from '../../store/reducers/crypto.reducer';
 import { IRootState } from '../../store';
-import { IDateSort, IPriceSort } from '../../types/store/crypto.reducer.type';
+import { clearTimeout } from 'timers';
 
 const IntervalBar = () => {
   const dispatch = useDispatch();
-  const { updateInterval, dateSort, priceSort } = useSelector(
+  const { updateInterval, data, totalNotes } = useSelector(
     (state: IRootState) => state.crypto
   );
+
   const getDataHandler = () => {
     dispatch<any>(addData());
+    dispatch({ type: CryptoTypes.SET_TOTAL_NOTES, payload: totalNotes + 1 });
+    sendRequest();
   };
 
   const sendRequest = () => {
-    setInterval(() => {
+    setTimeout(() => {
       getDataHandler();
-      rerenderData();
     }, updateInterval);
   };
 
@@ -28,28 +30,15 @@ const IntervalBar = () => {
     });
   };
 
-  useEffect(() => {
-    sendRequest();
-  }, []);
+  // useEffect(() => {
+  //   sendRequest();
+  // }, []);
 
-  const rerenderData = () => {
-    if (dateSort === 'later') {
-      dispatch({ type: CryptoTypes.SORT_DATA_EARLIER });
-      dispatch({ type: CryptoTypes.SORT_DATA_LATER });
-    }
-    if (dateSort === 'earlier') {
-      dispatch({ type: CryptoTypes.SORT_DATA_LATER });
-      dispatch({ type: CryptoTypes.SORT_DATA_EARLIER });
-    }
-    if (priceSort === 'high') {
-      dispatch({ type: CryptoTypes.SORT_DATA_LOW });
-      dispatch({ type: CryptoTypes.SORT_DATA_HIGH });
-    }
-    if (priceSort === 'low') {
-      dispatch({ type: CryptoTypes.SORT_DATA_HIGH });
-      dispatch({ type: CryptoTypes.SORT_DATA_LOW });
-    }
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      sendRequest();
+    }, 1000);
+  }, [data]);
 
   return (
     <div className="interval-bar">
