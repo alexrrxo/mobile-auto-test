@@ -1,5 +1,7 @@
+import { cutArray, getDataFromLocalstorage } from '../../helpers/localstorage';
+import { getPagesArray } from '../../helpers/pagination';
 import { timeConverter } from '../../helpers/timeConverter';
-import { InitialState } from '../../types/store/crypto.reducer.type';
+import { ICrypto, InitialState } from '../../types/store/crypto.reducer.type';
 import { coinMarketApi } from './../../api/coinMarketApi';
 
 const initialState: InitialState = {
@@ -8,6 +10,7 @@ const initialState: InitialState = {
   totalNotes: 95,
   currentPage: 4,
   limit: 10,
+  pageData: [],
   data: [],
 };
 
@@ -18,16 +21,22 @@ export enum CryptoTypes {
   SORT_DATA_LATER = 'SORT_DATA_LATER',
   SORT_DATA_EARLIER = 'SORT_DATA_EARLIER',
   SET_PAGE = 'SET_PAGE',
+  SET_TOTAL_NOTES = 'SET_TOTAL_NOTES',
   GET_DATA = 'GET_DATA',
+  SET_DATA = 'SET_DATA',
+  SET_PAGE_DATA = 'SET_PAGE_DATA',
 }
 
 const cryptoReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CryptoTypes.INITIALIZE_APP: {
-      const dataFromLocalstorage = localStorage.getItem('btcData');
+      // const dataFromLocalstorage = localStorage.getItem('btcData');
       return {
         ...state,
-        data: !dataFromLocalstorage ? [] : JSON.parse(dataFromLocalstorage),
+        data: action.payload,
+        // data: !dataFromLocalstorage
+        //   ? []
+        //   : JSON.parse(dataFromLocalstorage).reverse(),
       };
     }
     case CryptoTypes.SORT_DATA_HIGH: {
@@ -69,12 +78,36 @@ const cryptoReducer = (state = initialState, action: any) => {
         currentPage: action.payload,
       };
     }
+
+    case CryptoTypes.SET_TOTAL_NOTES: {
+      const dataFromLocalstorage = localStorage.getItem('btcData');
+      return {
+        ...state,
+        totalNotes: dataFromLocalstorage
+          ? JSON.parse(dataFromLocalstorage).length
+          : 0,
+      };
+    }
+
     case CryptoTypes.GET_DATA: {
       return {
         ...state,
         data: [...state.data, action.payload],
       };
     }
+    case CryptoTypes.SET_DATA: {
+      return {
+        ...state,
+        data: action.payload,
+      };
+    }
+    case CryptoTypes.SET_PAGE_DATA: {
+      return {
+        ...state,
+        pageData: action.payload,
+      };
+    }
+
     default:
       return state;
   }
@@ -100,6 +133,16 @@ export const getData = () => {
     }
 
     return dispatch({ type: CryptoTypes.GET_DATA, payload: btcData });
+  };
+};
+
+export const initializeApp = () => {
+  return (dispatch: any) => {
+    dispatch({ type: CryptoTypes.SET_TOTAL_NOTES });
+
+    const data = getDataFromLocalstorage();
+
+    dispatch({ type: CryptoTypes.INITIALIZE_APP, payload: data });
   };
 };
 

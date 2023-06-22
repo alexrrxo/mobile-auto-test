@@ -4,6 +4,7 @@ export type InitialState = {
   totalNotes: number;
   currentPage: number;
   limit: number;
+  pageData: ICrypto[];
   data: ICrypto[];
 };
 
