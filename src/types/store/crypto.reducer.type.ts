@@ -1,8 +1,9 @@
 export type InitialState = {
-  isFetching: boolean;
-  errorMessage: string | null;
   priceSort: IPriceSort;
   dateSort: IDateSort;
+  totalNotes: number;
+  currentPage: number;
+  limit: number;
   data: ICrypto[];
 };
 

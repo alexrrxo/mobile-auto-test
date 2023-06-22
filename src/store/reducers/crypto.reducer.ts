@@ -3,10 +3,11 @@ import { InitialState } from '../../types/store/crypto.reducer.type';
 import { coinMarketApi } from './../../api/coinMarketApi';
 
 const initialState: InitialState = {
-  isFetching: true,
-  errorMessage: '',
   priceSort: null,
   dateSort: null,
+  totalNotes: 95,
+  currentPage: 4,
+  limit: 10,
   data: [],
 };
 
@@ -16,6 +17,7 @@ export enum CryptoTypes {
   SORT_DATA_HIGH = 'SORT_DATA_HIGH',
   SORT_DATA_LATER = 'SORT_DATA_LATER',
   SORT_DATA_EARLIER = 'SORT_DATA_EARLIER',
+  SET_PAGE = 'SET_PAGE',
   GET_DATA = 'GET_DATA',
 }
 
@@ -58,6 +60,13 @@ const cryptoReducer = (state = initialState, action: any) => {
         data: [...state.data].sort((a, b) => a.timeStamp - b.timeStamp),
         dateSort: 'earlier' as typeof state.dateSort,
         priceSort: null,
+      };
+    }
+
+    case CryptoTypes.SET_PAGE: {
+      return {
+        ...state,
+        currentPage: action.payload,
       };
     }
     case CryptoTypes.GET_DATA: {
