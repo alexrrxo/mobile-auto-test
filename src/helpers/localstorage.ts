@@ -17,7 +17,6 @@ export const cutArray = (
   if (pageNumber && limit && dataNotes) {
     const from = (pageNumber - 1) * limit;
     const to = pageNumber * limit;
-    debugger;
     return dataNotes.slice(from, to);
   }
 };

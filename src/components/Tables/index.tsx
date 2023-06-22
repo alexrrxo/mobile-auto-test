@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Tables.css';
 
 import upArrow from '../../assets/icons/up-arrow.svg';
@@ -8,12 +8,12 @@ import { IRootState } from '../../store';
 import { ICrypto } from '../../types/store/crypto.reducer.type';
 import { CryptoTypes } from '../../store/reducers/crypto.reducer';
 import TableButton from './TableButton';
+import { cutArray } from '../../helpers/localstorage';
 
 const Tables = () => {
   const dispatch = useDispatch();
-  const { data, priceSort, dateSort } = useSelector(
-    (state: IRootState) => state.crypto
-  );
+  const { priceSort, dateSort, pageData, data, currentPage, limit } =
+    useSelector((state: IRootState) => state.crypto);
 
   const sortHandlerHigh = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_HIGH });
@@ -27,6 +27,12 @@ const Tables = () => {
   const sortHandlerEarlier = () => {
     dispatch({ type: CryptoTypes.SORT_DATA_EARLIER });
   };
+
+  useEffect(() => {
+    const pageData = cutArray(currentPage, limit, data);
+
+    dispatch({ type: CryptoTypes.SET_PAGE_DATA, payload: pageData });
+  }, [data]);
 
   return (
     <div className="tables">
@@ -60,7 +66,7 @@ const Tables = () => {
         )}
       </div>
       <div className="tables__data">
-        {data.map((crypto: ICrypto) => (
+        {pageData.map((crypto: ICrypto) => (
           <div className="table__row" key={crypto.id}>
             <div>{crypto.time}</div>
             <div>{crypto.price}</div>

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './IntervalBar.css';
 
 const IntervalBar = () => {
+  useEffect(() => {}, []);
+
   return (
     <div className="interval-bar">
       <span>Интервал сканирования</span>

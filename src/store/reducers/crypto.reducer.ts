@@ -1,3 +1,4 @@
+import { IRootState } from '..';
 import { cutArray, getDataFromLocalstorage } from '../../helpers/localstorage';
 import { getPagesArray } from '../../helpers/pagination';
 import { timeConverter } from '../../helpers/timeConverter';
@@ -141,8 +142,23 @@ export const initializeApp = () => {
     dispatch({ type: CryptoTypes.SET_TOTAL_NOTES });
 
     const data = getDataFromLocalstorage();
+    const pageData = cutArray(1, 10, data);
 
     dispatch({ type: CryptoTypes.INITIALIZE_APP, payload: data });
+    dispatch({ type: CryptoTypes.SET_PAGE_DATA, payload: pageData });
+  };
+};
+
+export const setPage = (
+  pageNumber: number,
+  limit: number,
+  dataNotes: ICrypto[]
+) => {
+  return (dispatch: any) => {
+    const pageData = cutArray(pageNumber, limit, dataNotes);
+
+    dispatch({ type: CryptoTypes.SET_PAGE_DATA, payload: pageData });
+    dispatch({ type: CryptoTypes.SET_PAGE, payload: pageNumber });
   };
 };
 
