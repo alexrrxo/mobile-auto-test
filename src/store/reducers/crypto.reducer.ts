@@ -1,6 +1,4 @@
-import { IRootState } from '..';
 import { cutArray, getDataFromLocalstorage } from '../../helpers/localstorage';
-import { getPagesArray } from '../../helpers/pagination';
 import { intervalConverter, timeConverter } from '../../helpers/timeConverter';
 import { ICrypto, InitialState } from '../../types/store/crypto.reducer.type';
 import { coinMarketApi } from './../../api/coinMarketApi';
@@ -24,7 +22,7 @@ export enum CryptoTypes {
   SORT_DATA_EARLIER = 'SORT_DATA_EARLIER',
   SET_PAGE = 'SET_PAGE',
   SET_TOTAL_NOTES = 'SET_TOTAL_NOTES',
-  GET_DATA = 'GET_DATA',
+  ADD_DATA = 'GET_DATA',
   SET_DATA = 'SET_DATA',
   SET_PAGE_DATA = 'SET_PAGE_DATA',
   SET_UPDATE_INTERVAL = 'SET_UPDATE_INTERVAL',
@@ -33,13 +31,9 @@ export enum CryptoTypes {
 const cryptoReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CryptoTypes.INITIALIZE_APP: {
-      // const dataFromLocalstorage = localStorage.getItem('btcData');
       return {
         ...state,
         data: action.payload,
-        // data: !dataFromLocalstorage
-        //   ? []
-        //   : JSON.parse(dataFromLocalstorage).reverse(),
       };
     }
     case CryptoTypes.SORT_DATA_HIGH: {
@@ -92,7 +86,7 @@ const cryptoReducer = (state = initialState, action: any) => {
       };
     }
 
-    case CryptoTypes.GET_DATA: {
+    case CryptoTypes.ADD_DATA: {
       return {
         ...state,
         data: [...state.data, action.payload],
@@ -123,10 +117,9 @@ const cryptoReducer = (state = initialState, action: any) => {
   }
 };
 
-export const getData = () => {
+export const addData = () => {
   return async (dispatch: any) => {
     const response = await coinMarketApi.getData();
-    console.log(response.last_updated);
     const btcData = {
       id: String(response.id) + new Date().getTime(),
       time: timeConverter(response.last_updated),
@@ -138,11 +131,11 @@ export const getData = () => {
       localStorage.setItem('btcData', JSON.stringify([btcData]));
     } else {
       const updatedBtcData = JSON.parse(localData);
-      updatedBtcData.push({ ...btcData });
+      updatedBtcData.unshift({ ...btcData });
       localStorage.setItem('btcData', JSON.stringify(updatedBtcData));
     }
 
-    return dispatch({ type: CryptoTypes.GET_DATA, payload: btcData });
+    return dispatch({ type: CryptoTypes.ADD_DATA, payload: btcData });
   };
 };
 

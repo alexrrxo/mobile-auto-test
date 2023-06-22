@@ -3,7 +3,7 @@ import './Pagination.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import { getPageCount, getPagesArray } from '../../helpers/pagination';
-import { CryptoTypes, setPage } from '../../store/reducers/crypto.reducer';
+import { setPage } from '../../store/reducers/crypto.reducer';
 
 const Pagination = () => {
   const dispatch = useDispatch();
@@ -18,11 +18,6 @@ const Pagination = () => {
     dispatch<any>(setPage(pageNumber, limit, data));
   };
 
-  useEffect(() => {
-    setPageHandler(1);
-  }, []);
-
-  useEffect(() => {});
   return (
     <div className="pagination">
       {pagesArray.map((page) => (
