@@ -14,3 +14,7 @@ export const timeConverter = (timeStamp: string) => {
 
   return [day, month, year].join('.') + ' / ' + [hours, minutes].join(':');
 };
+
+export const intervalConverter = (interval: number) => {
+  return interval * 1000;
+};

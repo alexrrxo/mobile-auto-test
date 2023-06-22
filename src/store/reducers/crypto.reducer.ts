@@ -1,16 +1,17 @@
 import { IRootState } from '..';
 import { cutArray, getDataFromLocalstorage } from '../../helpers/localstorage';
 import { getPagesArray } from '../../helpers/pagination';
-import { timeConverter } from '../../helpers/timeConverter';
+import { intervalConverter, timeConverter } from '../../helpers/timeConverter';
 import { ICrypto, InitialState } from '../../types/store/crypto.reducer.type';
 import { coinMarketApi } from './../../api/coinMarketApi';
 
 const initialState: InitialState = {
   priceSort: null,
   dateSort: null,
-  totalNotes: 95,
-  currentPage: 4,
+  totalNotes: 10,
+  currentPage: 1,
   limit: 10,
+  updateInterval: 60000,
   pageData: [],
   data: [],
 };
@@ -26,6 +27,7 @@ export enum CryptoTypes {
   GET_DATA = 'GET_DATA',
   SET_DATA = 'SET_DATA',
   SET_PAGE_DATA = 'SET_PAGE_DATA',
+  SET_UPDATE_INTERVAL = 'SET_UPDATE_INTERVAL',
 }
 
 const cryptoReducer = (state = initialState, action: any) => {
@@ -106,6 +108,13 @@ const cryptoReducer = (state = initialState, action: any) => {
       return {
         ...state,
         pageData: action.payload,
+      };
+    }
+
+    case CryptoTypes.SET_UPDATE_INTERVAL: {
+      return {
+        ...state,
+        updateInterval: intervalConverter(action.payload),
       };
     }
 
