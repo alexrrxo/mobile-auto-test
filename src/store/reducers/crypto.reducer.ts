@@ -111,6 +111,9 @@ const cryptoReducer = (state = initialState, action: any) => {
         timerId: action.payload,
       };
     }
+
+    default:
+      return state;
   }
 };
 
