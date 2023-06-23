@@ -5,11 +5,10 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
-  border: 1px solid green;
 }
 
 .tables__buttons {
+  margin-bottom: 10px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -24,19 +23,35 @@
   flex-direction: column;
 }
 
+
 .table__row {
+  padding: 5px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.table__row:nth-child(2n) {
+  background-color: #f2f2f2;
+}
+
 .tables__button {
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  background-color: #ececec;
+  border: none;
+
+  cursor: pointer;
+}
+
+.tables__button span {
+  margin-right: 10px;
 }
 
 .arrow {
-  width: 20px;
+  width: 15px;
 }

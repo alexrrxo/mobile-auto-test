@@ -4,7 +4,7 @@ import { TabbleButtonType } from './TableButton.type';
 const TableButton: FC<TabbleButtonType> = ({ clickHandler, imgSrc, text }) => {
   return (
     <button className="tables__button" onClick={clickHandler}>
-      {text}
+      <span>{text}</span>
       <img className="arrow" src={imgSrc} alt="" />
     </button>
   );

@@ -2,11 +2,10 @@ import axios from 'axios';
 
 const instance = axios.create({
   headers: {
-    'X-CMC_PRO_API_KEY': 'b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c',
-    'Access-Control-Allow-Origin': '*',
+    'X-CMC_PRO_API_KEY': '43d28735-e5b2-4456-890b-25d0c9e70c6a',
   },
   baseURL:
-    'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
+    'https://coin-realy.mobilauto.com.ua/v1/cryptocurrency/quotes/latest',
   params: {
     symbol: 'BTC',
   },

@@ -4,6 +4,19 @@
   align-items: center;
 }
 
+.pagination button {
+  margin: 0 5px;
+  width: 30px;
+  height: 30px;
+
+  font-size: 1rem;
+
+  border: 1px solid #ececec;
+  
+  cursor: pointer;
+}
+
 .currentPage {
-  background-color: green;
+  background-color: dodgerblue;
+  color: #fff;
 }

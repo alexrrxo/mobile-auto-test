@@ -9,14 +9,13 @@ export type InitialState = {
   timerId: setTimeoutType | null;
 };
 
+type setTimeoutType = ReturnType<typeof setTimeout>;
+
 export type ICrypto = {
   id: string;
   timeStamp: number;
   price: number;
   date: string;
 };
-
-type setTimeoutType = ReturnType<typeof setTimeout>;
-
 export type PriceSort = 'high' | 'low';
 export type DateSort = 'later' | 'earlier';

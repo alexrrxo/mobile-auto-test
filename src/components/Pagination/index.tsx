@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import './Pagination.css';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getPagesCount, getPagesArray } from '../../helpers/pagination';
 import { setPage } from '../../store/reducers/crypto.reducer';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import './Pagination.css';
 
 const Pagination = () => {
   const dispatch = useAppDispatch();

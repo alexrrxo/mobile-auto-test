@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import './App.css';
-import Board from './components/Board';
 import { initializeApp } from './store/reducers/crypto.reducer';
 import { useAppDispatch } from './hooks';
+import Board from './components/Board';
+import './App.css';
 
 function App() {
   const dispatch = useAppDispatch();

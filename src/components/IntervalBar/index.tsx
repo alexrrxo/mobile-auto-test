@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import './IntervalBar.css';
-import { CryptoTypes, addData } from '../../store/reducers/crypto.reducer';
-import { clearTimeout } from 'timers';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { CryptoTypes, addData } from '../../store/reducers/crypto.reducer';
+import './IntervalBar.css';
 
 const IntervalBar = () => {
   const dispatch = useAppDispatch();
@@ -10,10 +9,8 @@ const IntervalBar = () => {
   const { updateInterval, totalNotes, timerId } = useAppSelector(
     (state) => state.crypto
   );
-  debugger;
 
   const getDataHandler = () => {
-    debugger;
     dispatch(addData());
     dispatch({ type: CryptoTypes.SET_TOTAL_NOTES, payload: totalNotes + 1 });
     sendRequest(updateInterval);
@@ -24,8 +21,6 @@ const IntervalBar = () => {
       getDataHandler();
     }, interval);
     dispatch({ type: CryptoTypes.SET_TIMER_ID, payload: timer });
-
-    debugger;
   };
 
   const changeIntervalHandler = (e: any) => {
@@ -34,14 +29,12 @@ const IntervalBar = () => {
       payload: e.target.value,
     });
     window.clearTimeout(timerId);
-    debugger;
     dispatch({ type: CryptoTypes.SET_TIMER_ID, payload: null });
     sendRequest(e.target.value * 1000);
   };
 
   useEffect(() => {
     sendRequest(updateInterval);
-    debugger;
   }, []);
 
   return (

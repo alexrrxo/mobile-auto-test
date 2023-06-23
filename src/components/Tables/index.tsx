@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
-import './Tables.css';
-
+import { useEffect } from 'react';
 import upArrow from '../../assets/icons/up-arrow.svg';
-import downArrow from '../../assets/icons/down-arrow.svg';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { cutArray } from '../../helpers/localstorage';
 import { ICrypto } from '../../types/store/crypto.reducer.type';
 import { CryptoTypes } from '../../store/reducers/crypto.reducer';
 import TableButton from './TableButton';
-import { cutArray } from '../../helpers/localstorage';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import './Tables.css';
+import downArrow from '../../assets/icons/down-arrow.svg';
 
 const Tables = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +29,6 @@ const Tables = () => {
 
   useEffect(() => {
     const pageData = cutArray(currentPage, limit, data);
-
     dispatch({ type: CryptoTypes.SET_PAGE_DATA, payload: pageData });
   }, [data]);
 
@@ -41,13 +39,13 @@ const Tables = () => {
           <TableButton
             clickHandler={sortEarlierHandler}
             imgSrc={upArrow}
-            text="Дата/Время"
+            text="Дата / Время"
           />
         ) : (
           <TableButton
             clickHandler={sortLaterHandler}
             imgSrc={sortedBy === 'earlier' ? downArrow : ''}
-            text="Дата/Время"
+            text="Дата / Время"
           />
         )}
 

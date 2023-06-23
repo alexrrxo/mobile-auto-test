@@ -4,4 +4,16 @@
 
 .interval-bar span {
   margin-right: 10px;
+  font-size: 1rem;
+}
+
+.interval-bar select {
+  padding: 5px;
+
+  background-color: #ececec;
+  border: none;
+  border-radius: 3px;
+  outline: none;
+
+  cursor: pointer;
 }
