@@ -1,8 +1,13 @@
 import { cutArray, getDataFromLocalstorage } from '../../helpers/localstorage';
-import { intervalConverter, timeConverter } from '../../helpers/timeConverter';
-import { ICrypto, InitialState } from '../../types/store/crypto.reducer.type';
+import { intervalConverter } from '../../helpers/timeConverter';
+import { InitialState } from '../../types/store/crypto.reducer.type';
 import { coinMarketApi } from './../../api/coinMarketApi';
-import { IRootState } from '..';
+import { RootState } from '..';
+import {
+  addBtcToLocalstorage,
+  convertBtcData,
+} from '../../helpers/dataHandlers';
+import { Dispatch } from 'react';
 
 const initialState: InitialState = {
   sortedBy: 'later',
@@ -15,14 +20,13 @@ const initialState: InitialState = {
 };
 
 export enum CryptoTypes {
-  INITIALIZE_APP = 'INITIALIZE_APP',
   SORT_DATA_LOW = 'SORT_DATA_LOW',
   SORT_DATA_HIGH = 'SORT_DATA_HIGH',
   SORT_DATA_LATER = 'SORT_DATA_LATER',
   SORT_DATA_EARLIER = 'SORT_DATA_EARLIER',
   SET_PAGE = 'SET_PAGE',
   SET_TOTAL_NOTES = 'SET_TOTAL_NOTES',
-  ADD_DATA = 'GET_DATA',
+  ADD_DATA = 'ADD_DATA',
   SET_DATA = 'SET_DATA',
   SET_PAGE_DATA = 'SET_PAGE_DATA',
   SET_UPDATE_INTERVAL = 'SET_UPDATE_INTERVAL',
@@ -30,14 +34,7 @@ export enum CryptoTypes {
 
 const cryptoReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case CryptoTypes.INITIALIZE_APP: {
-      return {
-        ...state,
-        data: action.payload,
-      };
-    }
     case CryptoTypes.SORT_DATA_HIGH: {
-      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => b.price - a.price),
@@ -45,7 +42,6 @@ const cryptoReducer = (state = initialState, action: any) => {
       };
     }
     case CryptoTypes.SORT_DATA_LOW: {
-      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => a.price - b.price),
@@ -53,7 +49,6 @@ const cryptoReducer = (state = initialState, action: any) => {
       };
     }
     case CryptoTypes.SORT_DATA_LATER: {
-      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => b.timeStamp - a.timeStamp),
@@ -61,7 +56,6 @@ const cryptoReducer = (state = initialState, action: any) => {
       };
     }
     case CryptoTypes.SORT_DATA_EARLIER: {
-      debugger;
       return {
         ...state,
         data: [...state.data].sort((a, b) => a.timeStamp - b.timeStamp),
@@ -77,12 +71,9 @@ const cryptoReducer = (state = initialState, action: any) => {
     }
 
     case CryptoTypes.SET_TOTAL_NOTES: {
-      const dataFromLocalstorage = localStorage.getItem('btcData');
       return {
         ...state,
-        totalNotes: dataFromLocalstorage
-          ? JSON.parse(dataFromLocalstorage).length
-          : 0,
+        totalNotes: getDataFromLocalstorage().length,
       };
     }
 
@@ -118,31 +109,17 @@ const cryptoReducer = (state = initialState, action: any) => {
 };
 
 export const addData = () => {
-  debugger;
-  return async (dispatch: any, getState: () => IRootState) => {
+  return async (dispatch: Dispatch<any>, getState: () => RootState) => {
     try {
-      const response = await coinMarketApi.getData();
-      const btcData = {
-        id: String(response.id) + new Date().getTime(),
-        time: timeConverter(response.last_updated),
-        price: response.quote.USD.price,
-        timeStamp: new Date(response.last_updated).getTime(),
-      };
-      const localData = localStorage.getItem('btcData');
-      if (!localData) {
-        localStorage.setItem('btcData', JSON.stringify([btcData]));
-      } else {
-        const updatedBtcData = JSON.parse(localData);
-        updatedBtcData.unshift({ ...btcData });
-        localStorage.setItem('btcData', JSON.stringify(updatedBtcData));
-      }
+      const { sortedBy } = getState().crypto;
+      const data = await coinMarketApi.getData();
+      const btcData = convertBtcData(data);
+      addBtcToLocalstorage(btcData);
 
       dispatch({
         type: CryptoTypes.SET_DATA,
         payload: JSON.parse(localStorage.getItem('btcData') as string),
       });
-
-      const { sortedBy } = getState().crypto;
 
       sortedBy === 'high' && dispatch({ type: CryptoTypes.SORT_DATA_HIGH });
       sortedBy === 'low' && dispatch({ type: CryptoTypes.SORT_DATA_LOW });
@@ -156,24 +133,21 @@ export const addData = () => {
 };
 
 export const initializeApp = () => {
-  return (dispatch: any) => {
-    dispatch({ type: CryptoTypes.SET_TOTAL_NOTES });
-
+  return (dispatch: Dispatch<any>, getState: () => RootState) => {
+    const { limit, currentPage } = getState().crypto;
     const data = getDataFromLocalstorage();
-    const pageData = cutArray(1, 10, data);
+    const pageData = cutArray(currentPage, limit, data);
 
-    dispatch({ type: CryptoTypes.INITIALIZE_APP, payload: data });
+    dispatch({ type: CryptoTypes.SET_TOTAL_NOTES });
+    dispatch({ type: CryptoTypes.SET_DATA, payload: data });
     dispatch({ type: CryptoTypes.SET_PAGE_DATA, payload: pageData });
   };
 };
 
-export const setPage = (
-  pageNumber: number,
-  limit: number,
-  dataNotes: ICrypto[]
-) => {
-  return (dispatch: any) => {
-    const pageData = cutArray(pageNumber, limit, dataNotes);
+export const setPage = (pageNumber: number) => {
+  return (dispatch: Dispatch<any>, getState: () => RootState) => {
+    const { limit, data } = getState().crypto;
+    const pageData = cutArray(pageNumber, limit, data);
 
     dispatch({ type: CryptoTypes.SET_PAGE_DATA, payload: pageData });
     dispatch({ type: CryptoTypes.SET_PAGE, payload: pageNumber });

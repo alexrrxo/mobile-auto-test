@@ -1,21 +1,20 @@
 import React, { useEffect } from 'react';
 import './Pagination.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '../../store';
-import { getPageCount, getPagesArray } from '../../helpers/pagination';
+import { getPagesCount, getPagesArray } from '../../helpers/pagination';
 import { setPage } from '../../store/reducers/crypto.reducer';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 const Pagination = () => {
-  const dispatch = useDispatch();
-  const { totalNotes, limit, currentPage, data } = useSelector(
-    (state: IRootState) => state.crypto
+  const dispatch = useAppDispatch();
+  const { totalNotes, limit, currentPage } = useAppSelector(
+    (state) => state.crypto
   );
 
-  const pagesCount = getPageCount(totalNotes, limit);
+  const pagesCount = getPagesCount(totalNotes, limit);
   const pagesArray = getPagesArray(pagesCount);
 
   const setPageHandler = (pageNumber: number) => {
-    dispatch<any>(setPage(pageNumber, limit, data));
+    dispatch(setPage(pageNumber));
   };
 
   return (

@@ -12,7 +12,7 @@ export type ICrypto = {
   id: string;
   timeStamp: number;
   price: number;
-  time: string;
+  date: string;
 };
 
 export type PriceSort = 'high' | 'low';

@@ -1,8 +1,10 @@
-import { ICrypto } from '../types/store/crypto.reducer.type';
+import { ICrypto } from './../types/store/crypto.reducer.type';
 
 export const getDataFromLocalstorage = () => {
   const dataFromLocalstorage = localStorage.getItem('btcData');
-  const data = dataFromLocalstorage ? JSON.parse(dataFromLocalstorage) : [];
+  const data: ICrypto[] = dataFromLocalstorage
+    ? JSON.parse(dataFromLocalstorage)
+    : [];
 
   return data;
 };
@@ -12,9 +14,7 @@ export const cutArray = (
   limit: number,
   dataNotes: ICrypto[]
 ) => {
-  if (pageNumber && limit && dataNotes) {
-    const from = (pageNumber - 1) * limit;
-    const to = pageNumber * limit;
-    return dataNotes.slice(from, to);
-  }
+  const from = (pageNumber - 1) * limit;
+  const to = pageNumber * limit;
+  return dataNotes.slice(from, to);
 };

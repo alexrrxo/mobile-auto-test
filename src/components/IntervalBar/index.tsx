@@ -1,26 +1,34 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './IntervalBar.css';
-import { useDispatch, useSelector } from 'react-redux';
 import { CryptoTypes, addData } from '../../store/reducers/crypto.reducer';
-import { IRootState } from '../../store';
 import { clearTimeout } from 'timers';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+
+type setTimeoutType = ReturnType<typeof setTimeout>;
 
 const IntervalBar = () => {
-  const dispatch = useDispatch();
-  const { updateInterval, data, totalNotes } = useSelector(
-    (state: IRootState) => state.crypto
+  const dispatch = useAppDispatch();
+  const [timerId, setTimerId] = useState<setTimeoutType>();
+
+  const { updateInterval, totalNotes } = useAppSelector(
+    (state) => state.crypto
   );
+  debugger;
 
   const getDataHandler = () => {
-    dispatch<any>(addData());
+    debugger;
+    dispatch(addData());
     dispatch({ type: CryptoTypes.SET_TOTAL_NOTES, payload: totalNotes + 1 });
-    sendRequest();
+    sendRequest(updateInterval);
   };
 
-  const sendRequest = () => {
-    setTimeout(() => {
+  const sendRequest = (interval: number) => {
+    const timer = setTimeout(() => {
       getDataHandler();
-    }, updateInterval);
+    }, interval);
+    setTimerId(timer);
+
+    debugger;
   };
 
   const changeIntervalHandler = (e: any) => {
@@ -28,17 +36,16 @@ const IntervalBar = () => {
       type: CryptoTypes.SET_UPDATE_INTERVAL,
       payload: e.target.value,
     });
+    window.clearTimeout(timerId);
+    debugger;
+    setTimerId(undefined);
+    sendRequest(e.target.value * 1000);
   };
 
-  // useEffect(() => {
-  //   sendRequest();
-  // }, []);
-
   useEffect(() => {
-    setTimeout(() => {
-      sendRequest();
-    }, 1000);
-  }, [data]);
+    sendRequest(updateInterval);
+    debugger;
+  }, []);
 
   return (
     <div className="interval-bar">

@@ -3,17 +3,16 @@ import './Tables.css';
 
 import upArrow from '../../assets/icons/up-arrow.svg';
 import downArrow from '../../assets/icons/down-arrow.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '../../store';
 import { ICrypto } from '../../types/store/crypto.reducer.type';
 import { CryptoTypes } from '../../store/reducers/crypto.reducer';
 import TableButton from './TableButton';
 import { cutArray } from '../../helpers/localstorage';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 const Tables = () => {
-  const dispatch = useDispatch();
-  const { sortedBy, pageData, data, currentPage, limit } = useSelector(
-    (state: IRootState) => state.crypto
+  const dispatch = useAppDispatch();
+  const { sortedBy, pageData, data, currentPage, limit } = useAppSelector(
+    (state) => state.crypto
   );
 
   const sortHighHandler = () => {
@@ -69,7 +68,7 @@ const Tables = () => {
       <div className="tables__data">
         {pageData.map((crypto: ICrypto) => (
           <div className="table__row" key={crypto.id}>
-            <div>{crypto.time}</div>
+            <div>{crypto.date}</div>
             <div>{crypto.price}</div>
           </div>
         ))}

@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import './App.css';
 import Board from './components/Board';
-import { useDispatch } from 'react-redux';
 import { initializeApp } from './store/reducers/crypto.reducer';
+import { useAppDispatch } from './hooks';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch<any>(initializeApp());
+    dispatch(initializeApp());
   }, []);
 
   return (

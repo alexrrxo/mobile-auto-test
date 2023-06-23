@@ -1,4 +1,4 @@
-export const timeConverter = (timeStamp: string) => {
+export const dateConverter = (timeStamp: string) => {
   const date = new Date(timeStamp);
 
   const minutes =
