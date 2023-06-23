@@ -3,12 +3,11 @@ import './IntervalBar.css';
 import { CryptoTypes, addData } from '../../store/reducers/crypto.reducer';
 import { clearTimeout } from 'timers';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-
-type setTimeoutType = ReturnType<typeof setTimeout>;
+import { intervals } from '../../mocks/intervals';
 
 const IntervalBar = () => {
   const dispatch = useAppDispatch();
-  const [timerId, setTimerId] = useState<setTimeoutType>();
+  const [timerId, setTimerId] = useState();
 
   const { updateInterval, totalNotes } = useAppSelector(
     (state) => state.crypto
@@ -51,9 +50,11 @@ const IntervalBar = () => {
     <div className="interval-bar">
       <span>Интервал сканирования</span>
       <select onChange={changeIntervalHandler}>
-        <option value={60}>1 мин</option>
-        <option value={1800}>30 мин</option>
-        <option value={3600}>1 час</option>
+        {intervals.map((interval) => (
+          <option key={interval.name} value={interval.value}>
+            {interval.name}
+          </option>
+        ))}
       </select>
     </div>
   );

@@ -17,6 +17,7 @@ const initialState: InitialState = {
   updateInterval: 60000,
   pageData: [],
   data: [],
+  timerId: null,
 };
 
 export enum CryptoTypes {
@@ -30,6 +31,7 @@ export enum CryptoTypes {
   SET_DATA = 'SET_DATA',
   SET_PAGE_DATA = 'SET_PAGE_DATA',
   SET_UPDATE_INTERVAL = 'SET_UPDATE_INTERVAL',
+  SET_TIMER_ID = 'SET_TIMER_ID',
 }
 
 const cryptoReducer = (state = initialState, action: any) => {
@@ -103,8 +105,12 @@ const cryptoReducer = (state = initialState, action: any) => {
       };
     }
 
-    default:
-      return state;
+    case CryptoTypes.SET_TIMER_ID: {
+      return {
+        ...state,
+        timerId: action.payload,
+      };
+    }
   }
 };
 

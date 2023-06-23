@@ -6,8 +6,10 @@ export type InitialState = {
   updateInterval: number;
   pageData: ICrypto[];
   data: ICrypto[];
+  timerId: number | null;
 };
 
+// type setTimeoutType = ReturnType<typeof setTimeout>;
 export type ICrypto = {
   id: string;
   timeStamp: number;
